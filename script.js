@@ -167,9 +167,16 @@ notificationsBtn.addEventListener("click", () => {
   }
   notificationsContainer.innerHTML = "";
   for (i = 0; i < filteredNotifications.length; i++) {
-    if (currentUser.id === filteredNotifications[i].receiverId) {
-      notificationsContainer.innerHTML += `<p style="display:inline-block;color:white;font-size:20px;">
-      <span style="color:red;font-weight:bold;">${senders[i]}</span> wants to follow you</p><button data-senderId="${filteredNotifications[i].senderId}" data-receiverId="${currentUser.id}" class="btn btn-outline-danger accept" style="margin-left:10px;">Accept</button></br>`;
+    if (
+      currentUser.id === filteredNotifications[i].receiverId &&
+      filteredNotifications[i].isAccept != true
+    ) {
+      notificationsContainer.innerHTML += `<div id="${currentUser.id}">
+        <p style="display:inline-block;color:white;font-size:20px;">
+          <span style="color:red;font-weight:bold;">${senders[i]}</span> wants to follow you</p>
+          <button data-senderId="${filteredNotifications[i].senderId}" data-receiverId="${currentUser.id}" class="btn btn-outline-danger accept" style="margin-left:10px;">Accept</button>
+      </div>
+      </br>`;
     }
   }
   const acceptBtns = document.querySelectorAll(".accept");
@@ -197,6 +204,11 @@ notificationsBtn.addEventListener("click", () => {
         username: receiverUser.username,
         password: receiverUser.password,
       });
+      const currentNot = notifications.find(
+        (notification) => notification.senderId === senderId
+      );
+      currentNot.isAccept = true;
+      document.getElementById(receiverId).style.display = "none";
     });
   });
 
